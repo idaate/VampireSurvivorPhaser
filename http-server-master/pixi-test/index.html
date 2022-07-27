@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://pixijs.download/release/pixi.js"></script>
+  </head>
+  <body>
+    <script>
+
+     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+     const app = new PIXI.Application({ width: 640, height: 384 });
+     document.body.appendChild(app.view);
+
+     const tileSize = 16;
+
+     let map = {
+        width: 20,
+        height: 12,
+        tiles: [
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+          2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+          14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+        ],
+        collision: [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        ]
+     }
+
+     // hills is 6 by 6 tiles, each tile is 16 by 16
+     // app is 40 by 23 tiles
+     let hillTime = PIXI.Texture.from('Hills.png');
+    // let sprite = new PIXI.Sprite(texture);
+
+     // splits up the tileset
+     let tileTextures = {};
+     for (let i = 0; i < 36; i++ ){
+        let x = i % 6;
+        let y = Math.floor(i / 6);
+        tileTextures[i] = new PIXI.Texture
+                  (hillTime,
+                  new PIXI.Rectangle(x * tileSize, y * tileSize, tileSize, tileSize));
+     }
+
+     const sprite = new PIXI.Sprite(tileTextures[2]);
+
+     // adds button interaction to the sprite
+    // sprite.interactive = true;
+    // sprite.buttonMode = true;
+    // sprite.on('pointerdown', onClick);
+
+    let sky = new PIXI.Container();
+    let background = new PIXI.Container();
+
+    for ( let y = 0; y < map.width; y++ ){
+      for ( let x = 0; x < map.width; x++ ){
+        let tile = map.tiles[y * map.width + x];
+        let sprite = new PIXI.Sprite(tileTextures[tile]);
+        sprite.x = x * tileSize;
+        sprite.y = y * tileSize;
+        background.addChild(sprite);
+      }
+    }
+
+     app.stage.addChild(background);
+
+     background.scale.x *= 2;
+     background.scale.y *= 2;
+
+     // Add a variable to count up the seconds our demo has been running
+   /*  let elapsed = 0.0;
+     // Tell our application's ticker to run a new callback every frame, passing
+     // in the amount of time that has passed since the last tick
+     app.ticker.add((delta) => {
+         // add the time to our total elapsed time
+         elapsed += delta;
+         // Update the sprite's X position based on the cosine of our elapsed time. We divide
+         // by 50 to slow the animation down a bit...
+         sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
+         }
+
+         );*/
+    </script>
+  </body>
+</html>
