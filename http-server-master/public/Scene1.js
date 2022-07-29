@@ -13,13 +13,17 @@ class Scene1 extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+    this.load.spritesheet("enemy2", "assets/spritesheets/ship.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
     this.load.spritesheet("beam", "assets/spritesheets/beam.png", {
       frameWidth: 16,
       frameHeight: 16
     });
 
     this.load.bitmapFont("pixelFont", "assets/font/font.png", "assets/font/font.xml");
-    
+
   }
 
   create(){

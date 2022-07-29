@@ -1,17 +1,23 @@
 class Enemy extends Phaser.GameObjects.Sprite{
 
-  constructor(scene, x, y) {
+  constructor(scene, x, y, type, health, speed, strength, canShoot) {
 
-   super(scene, x, y, "enemy1");
+   super(scene, x, y, type);
 
-   this.enemyHealth = 10;
-   this.enemySpeed = 10;
-   this.enemyStrength = 1;
+   this.enemyHealth = health;
+   this.enemySpeed = speed;
+   this.enemyStrength = strength;
+   this.enemyProjectileType = canShoot;
 
    this.scene.add.existing(this);
    this.scene.physics.add.existing(this);
    scene.enemies.add(this);
    this.body.setCollideWorldBounds(true);
+
+   this.body.setBounce(10);
+
+   // note: TRY TO FIGURE OUT HOW TO MAKE THE ENEMIES NOT OVERLAP
+  // this.body.setPushable(true);
 
    scene.physics.world.enableBody(this);
 

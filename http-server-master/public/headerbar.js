@@ -25,7 +25,6 @@ class HeaderBar{
         this.bar.clear();
 
         this.bar.depth = 100;
-
         var yDraw = this.rememberScene.getPlayerY() - config.height/2;
         var xDraw = this.rememberScene.getPlayerX() - config.width/2;
 

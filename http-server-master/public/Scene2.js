@@ -4,7 +4,7 @@ class Scene2 extends Phaser.Scene {
     super("playGame");
 
     // create Main Player Values
-    this.playerSpeed = 30;
+    this.playerSpeed = 50;
     this.basePlayerHealth = 50;
     this.playerHealth = this.basePlayerHealth;
     this.playerStrength = 10;
@@ -80,7 +80,7 @@ class Scene2 extends Phaser.Scene {
     bottomLayer.setCollisionByProperty({ collision: true });
 
     // create the player
-    this.player = new Player(this, 200, 200);
+    this.player = new Player(this, 500, 500);
     this.player.depth = 5;
 
     // create the health bar
@@ -106,6 +106,8 @@ class Scene2 extends Phaser.Scene {
     this.physics.add.overlap(this.projectiles, this.enemies, this.hurtEnemy, null, this);
     this.physics.add.overlap(this.player, this.experiencePoints, this.playerGainExperience, null, this);
 
+
+
     // set world bounds
     this.physics.world.bounds.width = map.widthInPixels;
     this.physics.world.bounds.height = map.heightInPixels;
@@ -118,7 +120,7 @@ class Scene2 extends Phaser.Scene {
       map.heightInPixels
     );
     this.cameras.main.setZoom(1);
-    this.cameras.main.startFollow(this.player, true, 1, 1);
+    this.cameras.main.startFollow(this.player, false, 1, 1);
 
 
 
@@ -142,7 +144,7 @@ class Scene2 extends Phaser.Scene {
 
 
       if (Phaser.Input.Keyboard.JustDown(this.spacebar)){
-            this.spawnEnemy();
+            this.spawnBullet();
       }
 
       // updates all enemies on screen
@@ -217,54 +219,42 @@ class Scene2 extends Phaser.Scene {
     var xRandom = this.createSpawnCoordinateX();
     var yRandom = this.createSpawnCoordinateY();
 
+    console.log("enemy spawned");
+
     var enemy = new Enemy(this, xRandom, yRandom);
-    var bullet = new Bullet(this);
 
   }
 
   createSpawnCoordinateX(){
     var leftOrRight = Phaser.Math.Between(0, 1);
-    console.log("we got here");
       if (leftOrRight == 1){
-        console.log("spawn left");
+      //  console.log("spawn left");
         var newX = Phaser.Math.Between(this.player.x - 200, this.player.x - 120)
-        console.log("x is " + newX);
+      //  console.log("x is " + newX);
         return newX;
       } else {
-        console.log("spawn right");
+      //  console.log("spawn right");
         var newX = Phaser.Math.Between(this.player.x + 120, this.player.x + 200)
-        console.log("x is " + newX);
+      //  console.log("x is " + newX);
         return newX;
       }
   }
 
   createSpawnCoordinateY(){
     var leftOrRight = Phaser.Math.Between(0, 1);
-    console.log("we got here");
       if (leftOrRight == 1){
-        console.log("spawn down");
+      //  console.log("spawn down");
         var newX = Phaser.Math.Between(this.player.y - 200, this.player.y - 120)
-        console.log("x is " + newX);
+      //  console.log("x is " + newX);
         return newX;
       } else {
-        console.log("spawn up");
+      //  console.log("spawn up");
         var newX = Phaser.Math.Between(this.player.y + 120, this.player.y + 200)
-        console.log("x is " + newX);
+      //  console.log("x is " + newX);
         return newX;
       }
   }
 
-  /*checkNotAround(numberx, numbery){
-    if (numberx > (this.player.x + 160) || numberx < (this.player.x - 160)){
-      if (numbery > (this.player.y + 160) || numbery < (this.player.y - 160)){
-        console.log("not in sight");
-        return true;
-      }
-    }
-    else {
-      return false;
-    }
-  }*/
 
   hurtEnemy(theProjectile, theInjured){
     var damage = theProjectile.bulletStrength
