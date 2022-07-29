@@ -99,10 +99,12 @@ class Scene2 extends Phaser.Scene {
     // create groups
     this.enemies = this.add.group();
     this.projectiles = this.add.group();
+    this.enemyProjectiles = this.add.group();
     this.experiencePoints = this.add.group();
 
     // create colliders
     this.physics.add.overlap(this.player, this.enemies, this.hurtPlayer, null, this);
+    this.physics.add.overlap(this.player, this.enemyProjectiles, this.hurtPlayer, null, this);
     this.physics.add.overlap(this.projectiles, this.enemies, this.hurtEnemy, null, this);
     this.physics.add.overlap(this.player, this.experiencePoints, this.playerGainExperience, null, this);
 
@@ -149,13 +151,19 @@ class Scene2 extends Phaser.Scene {
 
       // updates all enemies on screen
       for(var i = 0; i < this.enemies.getChildren().length; i++){
-        var enemies = this.enemies.getChildren()[i];
-
+        var enemy = this.enemies.getChildren()[i];
+        enemy.update();
       }
 
-      // updates the bullets
+      // updates the player bullets
       for(var i = 0; i < this.projectiles.getChildren().length; i++){
         var beam = this.projectiles.getChildren()[i];
+        beam.update();
+      }
+
+      // updates the enemy bullets
+      for(var i = 0; i < this.enemyProjectiles.getChildren().length; i++){
+        var beam = this.enemyProjectiles.getChildren()[i];
         beam.update();
       }
 
@@ -213,16 +221,16 @@ class Scene2 extends Phaser.Scene {
     var bullet = new Bullet(this);
   }
 
-  spawnEnemy(){
+  spawnEnemyBullet(x, y, strength){
+    var enemyBullet = new EnemyBullet(this, x, y, strength);
+  }
 
+  spawnEnemy(){
     // creates coordinates for the enemies so they will spawn just off screen
     var xRandom = this.createSpawnCoordinateX();
     var yRandom = this.createSpawnCoordinateY();
-
     console.log("enemy spawned");
-
     var enemy = new Enemy(this, xRandom, yRandom);
-
   }
 
   createSpawnCoordinateX(){

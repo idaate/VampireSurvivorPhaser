@@ -85,7 +85,7 @@ class ClockView {
     if (this.enemyPhase == 1){
       // creates coordinates for the enemies so they will spawn just off screen
       console.log("enemy spawned");
-      var enemy = new Enemy(this.rememberScene, xRandom, yRandom, "enemy1", 10, 10, 10, false);
+      var enemy = new Enemy(this.rememberScene, xRandom, yRandom, "enemy1", 10, 10, 10, true);
       this.readyToSpawn = true;
     } else if (this.enemyPhase == 2){
       console.log("enemy spawned");
