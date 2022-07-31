@@ -8,6 +8,8 @@ class EnemyBullet extends Phaser.GameObjects.Sprite{
    this.bulletSpeed = 100;
    this.bulletStrength = theStrength;
 
+   this.isBullet = true;
+
    this.scene.add.existing(this);
    this.scene.physics.add.existing(this);
    scene.enemyProjectiles.add(this);

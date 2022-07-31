@@ -9,6 +9,8 @@ class Enemy extends Phaser.GameObjects.Sprite{
    this.enemyStrength = strength;
    this.enemyProjectileType = canShoot;
 
+   this.isBullet = false;
+
    this.readyToShoot = true;
 
    this.rememberScene = scene;

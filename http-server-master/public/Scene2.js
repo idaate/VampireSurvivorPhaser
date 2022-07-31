@@ -95,6 +95,7 @@ class Scene2 extends Phaser.Scene {
 
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD);
 
     // create groups
     this.enemies = this.add.group();
@@ -144,6 +145,10 @@ class Scene2 extends Phaser.Scene {
         this.physics.moveTo(currentEnemy, this.player.x, this.player.y, speedTime);
       }
 
+      if (Phaser.Input.Keyboard.JustDown(this.pauseKey)){
+        this.pauseMenu();
+      }
+
 
       if (Phaser.Input.Keyboard.JustDown(this.spacebar)){
             this.spawnBullet();
@@ -171,6 +176,10 @@ class Scene2 extends Phaser.Scene {
   }
 
   hurtPlayer(player, enemy){
+
+    if (enemy.isBullet){
+      enemy.destroy();
+    }
 
     if(this.player.alpha < 1){
       return;
@@ -270,6 +279,15 @@ class Scene2 extends Phaser.Scene {
     theInjured.setHealth(damage);
     //console.log.(theInjured.enemyHealth);
     theProjectile.destroy();
+  }
+
+  // --------------
+
+  // pause menu stuff
+
+  pauseMenu(){
+    this.scene.pause();
+    this.scene.launch('pauseGame');
   }
 
   // --------------
