@@ -24,23 +24,24 @@ class Scene4 extends Phaser.Scene {
     this.add.existing(this.bar);
   //  var background = graphics.strokeRect(50, 50, 400, 200);
 
+    this.buttonOne = Phaser.GameObjects.Image;
     // Play button
-    const buttonOne = this.add.image(width * 0.5, height * 0.3, 'glass-panel').setDisplaySize(150, 30);
-    this.add.text(buttonOne.x, buttonOne.y, 'Play').setOrigin(0.5);
+    this.buttonOne = this.add.image(width * 0.5, height * 0.3, 'glass-panel').setDisplaySize(150, 30);
+    this.add.text(this.buttonOne.x, this.buttonOne.y, 'Play').setOrigin(0.5);
     // Settings buttonOne
-    const buttonTwo = this.add.image(buttonOne.x, buttonOne.y + buttonOne.displayHeight + 10, 'glass-panel').setDisplaySize(150, 30);
-    this.add.text(buttonTwo.x, buttonTwo.y, 'Settings').setOrigin(0.5);
+    this.buttonTwo = this.add.image(this.buttonOne.x, this.buttonOne.y + this.buttonOne.displayHeight + 10, 'glass-panel').setDisplaySize(150, 30);
+    this.add.text(this.buttonTwo.x, this.buttonTwo.y, 'Settings').setOrigin(0.5);
     // Credits buttonOne
-    const buttonThree = this.add.image(buttonTwo.x, buttonTwo.y + buttonTwo.displayHeight + 10, 'glass-panel').setDisplaySize(150, 30);
-    this.add.text(buttonThree.x, buttonThree.y, 'Credits').setOrigin(0.5);
+    this.buttonThree = this.add.image(this.buttonTwo.x, this.buttonTwo.y + this.buttonTwo.displayHeight + 10, 'glass-panel').setDisplaySize(150, 30);
+    this.add.text(this.buttonThree.x, this.buttonThree.y, 'Credits').setOrigin(0.5);
 
     // creating an array to put the buttons in
     this.buttons = [];
     this.selectedButtonIndex = 0;
 
-    this.buttons.push(buttonOne);
-    this.buttons.push(buttonTwo);
-    this.buttons.push(buttonThree);
+    this.buttons.push(this.buttonOne);
+    this.buttons.push(this.buttonTwo);
+    this.buttons.push(this.buttonThree);
     console.log(this.buttons.length);
 
     this.buttonSelector = Phaser.GameObjects.Image;
@@ -56,17 +57,20 @@ class Scene4 extends Phaser.Scene {
     this.selectButton(0);
 
     // events
-    buttonOne.on('selected', () => {
+    this.buttonOne.on('selected', () => {
+      this.buttonOne.destroy();
+      this.buttonTwo.destroy();
+      this.buttonThree.destroy();
       console.log('play');
       this.buttonSelector.destroy();
       this.bar.clear();
       this.returnToScene2();
 
     })
-    buttonTwo.on('selected', () => {
+    this.buttonTwo.on('selected', () => {
       console.log('settings');
     })
-    buttonThree.on('selected', () => {
+    this.buttonThree.on('selected', () => {
       console.log('credits');
     })
 

@@ -59,6 +59,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
   checkHealth(health){
     if(health < 0){
+      this.textExp = new Exp(this.rememberScene, this.x, this.y, 1);
       this.destroy();
       console.log("destwoy");
     }
