@@ -209,7 +209,7 @@ class Scene2 extends Phaser.Scene {
         // time of immunity
         var tween = this.tweens.add({
           targets: this.player,
-          completeDelay: 100,
+          completeDelay: 500,
           repeat: 0,
           onComplete: function(){
             console.log("ow!");
@@ -286,6 +286,7 @@ class Scene2 extends Phaser.Scene {
       this.playerNeededExperience += 5;
       this.playerExperience = 0;
       this.playerLevel += 1;
+      this.pauseMenu();
     }
 
     thePoint.destroy();

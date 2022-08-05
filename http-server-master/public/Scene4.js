@@ -3,37 +3,50 @@ class Scene4 extends Phaser.Scene {
   constructor(){
     super("pauseGame");
 
+    this.upgrades = ['Bullet', 'Aura', 'Bomb'];
+    this.permUpgrades = ['Attack Up', 'Crit Up', 'Health Up', 'Movement Speed Up', 'Attack Speed Up'];
+
   }
 
   preload(){
     // load in images
     this.load.image('glass-panel', 'assets/cursorTime/PNG/glassPanel.png');
     this.load.image('cursor-hand', 'assets/cursorTime/PNG/cursor_hand.png');
+
+    // array for upgrades
+    // create a function that will randomly pick 3 elements from this array to generate buttons for.
+    // after randomly picking those elements,
+
+
   }
 
   create(){
 
+    var howManyLeft = this.upgrades.length;
+
     const { width, height } = this.scale;
 
     this.bar = new Phaser.GameObjects.Graphics(this);
-  //  this.bar.defaultStrokeAlpha(5);
     this.bar.alpha = 0.5;
     this.bar.fillStyle(0x000000);
     this.bar.fillRect(0, 0, width, height);
 
     this.add.existing(this.bar);
   //  var background = graphics.strokeRect(50, 50, 400, 200);
+    this.buttonOneBuff = this.pickRandomArray();
+    this.buttonTwoBuff = this.pickRandomArray();
+    this.buttonThreeBuff = this.pickRandomArray();
 
     this.buttonOne = Phaser.GameObjects.Image;
     // Play button
-    this.buttonOne = this.add.image(width * 0.5, height * 0.3, 'glass-panel').setDisplaySize(150, 30);
-    this.add.text(this.buttonOne.x, this.buttonOne.y, 'Play').setOrigin(0.5);
+    this.buttonOne = this.add.image(width * 0.5, height * 0.3, 'glass-panel').setDisplaySize(200, 30);
+    this.textOne = this.add.text(this.buttonOne.x, this.buttonOne.y, this.buttonOneBuff).setOrigin(0.5);
     // Settings buttonOne
-    this.buttonTwo = this.add.image(this.buttonOne.x, this.buttonOne.y + this.buttonOne.displayHeight + 10, 'glass-panel').setDisplaySize(150, 30);
-    this.add.text(this.buttonTwo.x, this.buttonTwo.y, 'Settings').setOrigin(0.5);
+    this.buttonTwo = this.add.image(this.buttonOne.x, this.buttonOne.y + this.buttonOne.displayHeight + 10, 'glass-panel').setDisplaySize(200, 30);
+    this.textTwo = this.add.text(this.buttonTwo.x, this.buttonTwo.y, this.buttonTwoBuff).setOrigin(0.5);
     // Credits buttonOne
-    this.buttonThree = this.add.image(this.buttonTwo.x, this.buttonTwo.y + this.buttonTwo.displayHeight + 10, 'glass-panel').setDisplaySize(150, 30);
-    this.add.text(this.buttonThree.x, this.buttonThree.y, 'Credits').setOrigin(0.5);
+    this.buttonThree = this.add.image(this.buttonTwo.x, this.buttonTwo.y + this.buttonTwo.displayHeight + 10, 'glass-panel').setDisplaySize(200, 30);
+    this.textThree = this.add.text(this.buttonThree.x, this.buttonThree.y, this.buttonThreeBuff).setOrigin(0.5);
 
     // creating an array to put the buttons in
     this.buttons = [];
@@ -56,11 +69,26 @@ class Scene4 extends Phaser.Scene {
     // starts the menu with the first option selected
     this.selectButton(0);
 
+    console.log(this.upgrades.length);
+
     // events
     this.buttonOne.on('selected', () => {
+
+      // clears the screen
       this.buttonOne.destroy();
+      this.textOne.destroy();
       this.buttonTwo.destroy();
+      this.textTwo.destroy();
       this.buttonThree.destroy();
+      this.textThree.destroy();
+
+      // adds unused elements back into the array
+      this.upgrades.push(this.buttonTwoBuff);
+      this.upgrades.push(this.buttonThreeBuff);
+
+      // if applicable, add the 'next level' of buffs
+      this.addNextLevel(this.buttonOneBuff);
+
       console.log('play');
       this.buttonSelector.destroy();
       this.bar.clear();
@@ -68,16 +96,31 @@ class Scene4 extends Phaser.Scene {
 
     })
     this.buttonTwo.on('selected', () => {
-      console.log('settings');
+
+      // clears the screen
+      this.buttonOne.destroy();
+      this.textOne.destroy();
+      this.buttonTwo.destroy();
+      this.textTwo.destroy();
+      this.buttonThree.destroy();
+      this.textThree.destroy();
+
+      // adds unused elements back into the array
+      this.upgrades.push(this.buttonOneBuff);
+      this.upgrades.push(this.buttonThreeBuff);
+
+      // if applicable, add the 'next level' of buffs
+      this.addNextLevel(this.buttonTwoBuff);
+
+      console.log('play');
+      this.buttonSelector.destroy();
+      this.bar.clear();
+      this.returnToScene2();
+
     })
     this.buttonThree.on('selected', () => {
       console.log('credits');
     })
-
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-  		buttonOne.off('selected');
-  		// ...
-  	})
 
   }
 
@@ -124,32 +167,65 @@ class Scene4 extends Phaser.Scene {
     const downJustPressed = Phaser.Input.Keyboard.JustDown(this.down);
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.spacebar);
 
-  /*  if (upJustPressed){
-      console.log("we pressed up");
-    } else if (downJustPressed){
-      console.log("we pressed down");
-    } else if (spaceJustPressed){
-      this.returnToScene2();
-    }*/
-
     if (upJustPressed){
       this.selectNextButton(-1);
     } else if (downJustPressed){
       this.selectNextButton(1);
-    }else if (spaceJustPressed){
+    } else if (spaceJustPressed){
       this.confirmSelection();
     }
 
 
-
-    if (Phaser.Input.Keyboard.JustDown(this.spacebar)){
-          this.returnToScene2();
-    }
   }
 
   returnToScene2(){
     this.scene.resume('playGame');
     this.scene.sleep();
+  }
+
+  // picks a random element from the upgrades array to be included
+  pickRandomArray(){
+
+    console.log(this.upgrades.length);
+
+    var randomUpgrade;
+
+    if (this.upgrades.length > 0){
+      var chosenNum = Math.floor(Math.random() * this.upgrades.length);
+      randomUpgrade = this.upgrades[chosenNum];
+      console.log(randomUpgrade);
+      this.upgrades.splice(chosenNum, 1);
+      console.log(this.upgrades.length);
+    } else {
+      var chosenNum = Math.floor(Math.random() * this.permUpgrades.length);
+      randomUpgrade = this.permUpgrades[chosenNum];
+    }
+    return randomUpgrade;
+
+  }
+
+  addNextLevel(theBuff){
+
+    switch(theBuff){
+      case 'Bullet':
+        this.upgrades.push('2nd Bullet Upgrade');
+        break;
+      case '2nd Bullet Upgrade':
+        this.upgrades.push('Final Bullet Upgrade');
+        break;
+      case 'Aura':
+        this.upgrades.push('2nd Aura Upgrade');
+        break;
+      case '2nd Aura Upgrade':
+        this.upgrades.push('Final Aura Upgrade');
+        break;
+      case 'Bomb':
+        this.upgrades.push('2nd Bomb Upgrade');
+        break;
+      case '2nd Bomb Upgrade':
+        this.upgrades.push('Final Bomb Upgrade');
+    }
+
   }
 
 }
