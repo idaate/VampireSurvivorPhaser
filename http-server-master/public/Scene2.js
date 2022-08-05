@@ -13,6 +13,7 @@ class Scene2 extends Phaser.Scene {
     this.playerDirection = "Left";
 
     this.playerLevel = 1;
+    this.playerNeededExperience = 10;
     this.playerExperience = 0;
 
     this.timerEvent;
@@ -93,18 +94,26 @@ class Scene2 extends Phaser.Scene {
     // create the big clock on the top of the screen
     this.clockTime = new ClockView(this);
 
+    // create an indicator of how much experience the player has
+    this.expTime = new ExpCount(this);
+
+
+    // pause menu
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD);
 
     // create groups
     this.enemies = this.add.group();
     this.projectiles = this.add.group();
+    this.enemyProjectiles = this.add.group();
     this.experiencePoints = this.add.group();
 
     // create colliders
     this.physics.add.overlap(this.player, this.enemies, this.hurtPlayer, null, this);
+    this.physics.add.overlap(this.player, this.enemyProjectiles, this.hurtPlayer, null, this);
     this.physics.add.overlap(this.projectiles, this.enemies, this.hurtEnemy, null, this);
-    this.physics.add.overlap(this.player, this.experiencePoints, this.playerGainExperience, null, this);
+    this.physics.add.overlap(this.player, this.experiencePoints, this.getExp, null, this);
 
 
 
@@ -122,7 +131,7 @@ class Scene2 extends Phaser.Scene {
     this.cameras.main.setZoom(1);
     this.cameras.main.startFollow(this.player, false, 1, 1);
 
-
+    this.textExp = new Exp(this, this.player.x, this.player.y, 1);
 
   }
 
@@ -135,11 +144,16 @@ class Scene2 extends Phaser.Scene {
       this.healthBar.draw();
       this.headerBar.draw();
       this.clockTime.update();
+      this.expTime.update();
 
       for(var i = 0; i < this.enemies.getChildren().length; i++){
         var currentEnemy = this.enemies.getChildren()[i];
         var speedTime = currentEnemy.getSpeed();
         this.physics.moveTo(currentEnemy, this.player.x, this.player.y, speedTime);
+      }
+
+      if (Phaser.Input.Keyboard.JustDown(this.pauseKey)){
+        this.pauseMenu();
       }
 
 
@@ -149,13 +163,19 @@ class Scene2 extends Phaser.Scene {
 
       // updates all enemies on screen
       for(var i = 0; i < this.enemies.getChildren().length; i++){
-        var enemies = this.enemies.getChildren()[i];
-
+        var enemy = this.enemies.getChildren()[i];
+        enemy.update();
       }
 
-      // updates the bullets
+      // updates the player bullets
       for(var i = 0; i < this.projectiles.getChildren().length; i++){
         var beam = this.projectiles.getChildren()[i];
+        beam.update();
+      }
+
+      // updates the enemy bullets
+      for(var i = 0; i < this.enemyProjectiles.getChildren().length; i++){
+        var beam = this.enemyProjectiles.getChildren()[i];
         beam.update();
       }
 
@@ -163,6 +183,10 @@ class Scene2 extends Phaser.Scene {
   }
 
   hurtPlayer(player, enemy){
+
+    if (enemy.isBullet){
+      enemy.destroy();
+    }
 
     if(this.player.alpha < 1){
       return;
@@ -185,7 +209,7 @@ class Scene2 extends Phaser.Scene {
         // time of immunity
         var tween = this.tweens.add({
           targets: this.player,
-          completeDelay: 100,
+          completeDelay: 500,
           repeat: 0,
           onComplete: function(){
             console.log("ow!");
@@ -199,30 +223,20 @@ class Scene2 extends Phaser.Scene {
     }
   }
 
-
-  playerGainExperience(player, experience){
-    if (this.playerExperience < 100){
-      this.playerExperience += 1;
-    } else {
-      this.playerLevel += 1;
-      this.playerExperience = 0;
-    }
-  }
-
   spawnBullet(){
     var bullet = new Bullet(this);
   }
 
-  spawnEnemy(){
+  spawnEnemyBullet(x, y, strength){
+    var enemyBullet = new EnemyBullet(this, x, y, strength);
+  }
 
+  spawnEnemy(){
     // creates coordinates for the enemies so they will spawn just off screen
     var xRandom = this.createSpawnCoordinateX();
     var yRandom = this.createSpawnCoordinateY();
-
     console.log("enemy spawned");
-
     var enemy = new Enemy(this, xRandom, yRandom);
-
   }
 
   createSpawnCoordinateX(){
@@ -262,6 +276,30 @@ class Scene2 extends Phaser.Scene {
     theInjured.setHealth(damage);
     //console.log.(theInjured.enemyHealth);
     theProjectile.destroy();
+  }
+
+  getExp(player, thePoint){
+
+    this.playerExperience += thePoint.worth;
+
+    if (this.playerExperience >= this.playerNeededExperience){
+      this.playerNeededExperience += 5;
+      this.playerExperience = 0;
+      this.playerLevel += 1;
+      this.pauseMenu();
+    }
+
+    thePoint.destroy();
+
+  }
+
+  // --------------
+
+  // pause menu stuff
+
+  pauseMenu(){
+    this.scene.pause();
+    this.scene.launch('pauseGame');
   }
 
   // --------------

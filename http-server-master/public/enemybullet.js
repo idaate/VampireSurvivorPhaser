@@ -1,21 +1,25 @@
-class Bullet extends Phaser.GameObjects.Sprite{
+class EnemyBullet extends Phaser.GameObjects.Sprite{
 
-  constructor(scene) {
+  constructor(scene, x, y, theStrength) {
 
-    var x = scene.player.x;
-    var y = scene.player.y;
-    var position;
+   // var position;
    super(scene, x, y, "beam");
 
-   this.bulletSpeed = 10;
-   this.bulletStrength = 10;
+   this.bulletSpeed = 100;
+   this.bulletStrength = theStrength;
+
+   this.isBullet = true;
 
    this.scene.add.existing(this);
    this.scene.physics.add.existing(this);
-   scene.projectiles.add(this);
+   scene.enemyProjectiles.add(this);
+//   this.body.setCollideWorldBounds(true);
 
    scene.physics.world.enableBody(this);
 
+   scene.physics.moveTo(this, scene.player.x, scene.player.y, this.bulletSpeed);
+
+   /*
    if (this.scene.playerDirection == "Up"){
      this.position = "Up";
      this.body.velocity.y = - 250;
@@ -28,7 +32,7 @@ class Bullet extends Phaser.GameObjects.Sprite{
    } else if ( this.scene.playerDirection == "Right"){
      this.position = "Right";
      this.body.velocity.x = 250;
-   }
+   }*/
 
 
  }
@@ -40,6 +44,10 @@ class Bullet extends Phaser.GameObjects.Sprite{
       console.log("destroy bullet");
     }
 
+  }
+
+  getStrength(){
+    return 10;
   }
 
 

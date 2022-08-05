@@ -9,6 +9,12 @@ class Enemy extends Phaser.GameObjects.Sprite{
    this.enemyStrength = strength;
    this.enemyProjectileType = canShoot;
 
+   this.isBullet = false;
+
+   this.readyToShoot = true;
+
+   this.rememberScene = scene;
+
    this.scene.add.existing(this);
    this.scene.physics.add.existing(this);
    scene.enemies.add(this);
@@ -16,17 +22,19 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
    this.body.setBounce(10);
 
-   // note: TRY TO FIGURE OUT HOW TO MAKE THE ENEMIES NOT OVERLAP
-  // this.body.setPushable(true);
-
    scene.physics.world.enableBody(this);
 
  }
 
   update(){
 
-    // console.log("awa");
-    //this.physics.moveTo(this, 10, 10, 10);
+    if(this.enemyProjectileType){
+      if(this.readyToShoot){
+        this.readyToShoot = false;
+        this.fireBullet();
+        this.letsWait();
+      }
+    }
 
   }
 
@@ -51,10 +59,30 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
   checkHealth(health){
     if(health < 0){
+      this.textExp = new Exp(this.rememberScene, this.x, this.y, 1);
       this.destroy();
       console.log("destwoy");
     }
   }
 
+  fireBullet(){
+    console.log("we got here");
+    console.log(this.x);
+      this.rememberScene.spawnEnemyBullet(this.x, this.y, this.strength);
+  }
+
+  // waits one second
+  letsWait(){
+    this.rememberScene.time.addEvent({
+      delay: 5000,
+      callback: this.setTrue,
+      callbackScope: this,
+      loop: false
+    });
+  }
+
+  setTrue(){
+    this.readyToShoot = true;
+  }
 
 }

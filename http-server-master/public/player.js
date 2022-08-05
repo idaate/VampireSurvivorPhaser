@@ -22,19 +22,19 @@ class Player extends Phaser.GameObjects.Sprite{
   playerMovementManager(speed){
     if (this.keyW.isDown) {
       this.scene.playerDirection = "Up";
-      console.log(this.scene.playerDirection);
+    //  console.log(this.scene.playerDirection);
       this.body.setVelocityY(-speed);
     } else if (this.keyA.isDown) {
       this.scene.playerDirection = "Left";
-      console.log(this.scene.playerDirection);
+    //  console.log(this.scene.playerDirection);
       this.body.setVelocityX(-speed);
     } else if (this.keyS.isDown) {
       this.scene.playerDirection = "Down";
-      console.log(this.scene.playerDirection);
+  //    console.log(this.scene.playerDirection);
       this.body.setVelocityY(speed);
     } else if (this.keyD.isDown) {
       this.scene.playerDirection = "Right";
-      console.log(this.scene.playerDirection);
+  //    console.log(this.scene.playerDirection);
       this.body.setVelocityX(speed);
     }
     else {

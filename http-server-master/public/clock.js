@@ -94,7 +94,7 @@ class ClockView {
     }
     else if (this.enemyPhase == 3){
       console.log("enemy spawned");
-      var enemy = new Enemy(this.rememberScene, xRandom, yRandom, "enemy2", 1, 30, 1, false);
+      var enemy = new Enemy(this.rememberScene, xRandom, yRandom, "enemy3", 10, 10, 10, true);
       this.readyToSpawn = true;
     }
 
@@ -107,7 +107,7 @@ class ClockView {
       this.currentSpawnTime = 1500;
     } else if (this.timePassed == 30){
       this.enemyPhase = 2;
-      this.currentSpawnTime = 100;
+      this.currentSpawnTime = 250;
     } else if (this.timePassed == 33){
       this.enemyPhase = 3;
       this.currentSpawnTime = 1000;
