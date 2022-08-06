@@ -3,7 +3,11 @@ class Scene4 extends Phaser.Scene {
   constructor(){
     super("pauseGame");
 
-    this.upgrades = ['Bullet', 'Aura', 'Bomb'];
+
+        // array for upgrades
+        // create a function that will randomly pick 3 elements from this array to generate buttons for.
+        // after randomly picking those elements,
+    this.upgrades = ['Bullet', 'Aura', 'Bomb', 'Healing Drops'];
     this.permUpgrades = ['Attack Up', 'Crit Up', 'Health Up', 'Movement Speed Up', 'Attack Speed Up'];
 
   }
@@ -12,11 +16,6 @@ class Scene4 extends Phaser.Scene {
     // load in images
     this.load.image('glass-panel', 'assets/cursorTime/PNG/glassPanel.png');
     this.load.image('cursor-hand', 'assets/cursorTime/PNG/cursor_hand.png');
-
-    // array for upgrades
-    // create a function that will randomly pick 3 elements from this array to generate buttons for.
-    // after randomly picking those elements,
-
 
   }
 
@@ -74,6 +73,8 @@ class Scene4 extends Phaser.Scene {
     // events
     this.buttonOne.on('selected', () => {
 
+      this.scene.get("playGame").receiveBuff(this.buttonOneBuff);
+
       // clears the screen
       this.buttonOne.destroy();
       this.textOne.destroy();
@@ -97,6 +98,8 @@ class Scene4 extends Phaser.Scene {
     })
     this.buttonTwo.on('selected', () => {
 
+      this.scene.get("playGame").receiveBuff(this.buttonTwoBuff);
+
       // clears the screen
       this.buttonOne.destroy();
       this.textOne.destroy();
@@ -119,7 +122,27 @@ class Scene4 extends Phaser.Scene {
 
     })
     this.buttonThree.on('selected', () => {
-      console.log('credits');
+      this.scene.get("playGame").receiveBuff(this.buttonThreeBuff);
+
+      // clears the screen
+      this.buttonOne.destroy();
+      this.textOne.destroy();
+      this.buttonTwo.destroy();
+      this.textTwo.destroy();
+      this.buttonThree.destroy();
+      this.textThree.destroy();
+
+      // adds unused elements back into the array
+      this.upgrades.push(this.buttonTwoBuff);
+      this.upgrades.push(this.buttonOneBuff);
+
+      // if applicable, add the 'next level' of buffs
+      this.addNextLevel(this.buttonThreeBuff);
+
+      console.log('play');
+      this.buttonSelector.destroy();
+      this.bar.clear();
+      this.returnToScene2();
     })
 
   }

@@ -20,6 +20,10 @@ class ClockView {
   this.currentSpawnTime = 3000;
   this.enemyPhase = 1;
 
+  // health timer
+  this.healthActivate = false;
+  this.readyToSpawnHealth = true;
+
  }
 
   update(){
@@ -47,6 +51,10 @@ class ClockView {
 
     this.spawnEnemyWhen();
     this.setSpeedOfEnemySpawn();
+
+    if (this.rememberScene.canSpawnHealth){
+      this.spawnHealthWhen();
+    }
 
   }
 
@@ -77,7 +85,23 @@ class ClockView {
     }
   }
 
+  spawnHealthWhen(){
+
+    if (this.readyToSpawnHealth){
+      this.readyToSpawnHealth = false;
+      this.rememberScene.time.addEvent({
+        delay: 5000,
+        callback: this.spawnHealth,
+        callbackScope: this,
+        loop: false
+      });
+    }
+
+  }
+
   spawnEnemy(){
+
+    //this.spawnHealth();
 
     var xRandom = this.rememberScene.createSpawnCoordinateX();
     var yRandom = this.rememberScene.createSpawnCoordinateY();
@@ -112,6 +136,21 @@ class ClockView {
       this.enemyPhase = 3;
       this.currentSpawnTime = 1000;
     }
+
+  }
+
+
+
+  spawnHealth(){
+
+    console.log("spawning health");
+
+    var xRandom = this.rememberScene.createSpawnCoordinateX();
+    var yRandom = this.rememberScene.createSpawnCoordinateY();
+
+    var healthRegen = (Math.floor(Math.random() * 14) + 1);
+
+    this.rememberScene.testHeart = new Heart(this.rememberScene, xRandom, yRandom, healthRegen);
 
   }
 

@@ -16,6 +16,9 @@ class Scene2 extends Phaser.Scene {
     this.playerNeededExperience = 10;
     this.playerExperience = 0;
 
+    // active buffs
+    this.canSpawnHealth = false;
+
     this.timerEvent;
 
     this.enemyAmount = 0;
@@ -108,12 +111,14 @@ class Scene2 extends Phaser.Scene {
     this.projectiles = this.add.group();
     this.enemyProjectiles = this.add.group();
     this.experiencePoints = this.add.group();
+    this.healthPotions = this.add.group();
 
     // create colliders
     this.physics.add.overlap(this.player, this.enemies, this.hurtPlayer, null, this);
     this.physics.add.overlap(this.player, this.enemyProjectiles, this.hurtPlayer, null, this);
     this.physics.add.overlap(this.projectiles, this.enemies, this.hurtEnemy, null, this);
     this.physics.add.overlap(this.player, this.experiencePoints, this.getExp, null, this);
+    this.physics.add.overlap(this.player, this.healthPotions, this.gainHealth, null, this);
 
 
 
@@ -131,7 +136,8 @@ class Scene2 extends Phaser.Scene {
     this.cameras.main.setZoom(1);
     this.cameras.main.startFollow(this.player, false, 1, 1);
 
-    this.textExp = new Exp(this, this.player.x, this.player.y, 1);
+    // this.textExp = new Exp(this, this.player.x, this.player.y, 1);
+    this.testHeart = new Heart(this, this.player.x + 20, this.player.y + 20, 10);
 
   }
 
@@ -291,6 +297,27 @@ class Scene2 extends Phaser.Scene {
 
     thePoint.destroy();
 
+  }
+
+  gainHealth(player, theHealth){
+
+    this.playerHealth += theHealth.healthReturn;
+
+    if(this.playerHealth >= this.basePlayerHealth){
+      this.playerHealth = this.basePlayerHealth;
+    }
+
+    theHealth.destroy();
+
+  }
+
+  receiveBuff(theBuff){
+
+    switch(theBuff){
+      case 'Healing Drops':
+        this.canSpawnHealth = true;
+        break;
+    }
   }
 
   // --------------

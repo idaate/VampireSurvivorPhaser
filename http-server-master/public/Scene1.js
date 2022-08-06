@@ -13,6 +13,10 @@ class Scene1 extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16
     });
+    this.load.spritesheet("heart", "assets/spritesheets/heart.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
     this.load.spritesheet("enemy1", "assets/spritesheets/ship3.png", {
       frameWidth: 32,
       frameHeight: 32
