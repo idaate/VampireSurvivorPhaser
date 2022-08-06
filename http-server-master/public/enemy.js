@@ -66,7 +66,6 @@ class Enemy extends Phaser.GameObjects.Sprite{
   }
 
   fireBullet(){
-    console.log("we got here");
     console.log(this.x);
       this.rememberScene.spawnEnemyBullet(this.x, this.y, this.strength);
   }

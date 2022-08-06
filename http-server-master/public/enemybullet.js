@@ -19,8 +19,6 @@ class EnemyBullet extends Phaser.GameObjects.Sprite{
 
    scene.physics.moveTo(this, scene.player.x, scene.player.y, this.bulletSpeed);
 
-
-
  }
 
   update(){

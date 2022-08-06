@@ -210,15 +210,12 @@ class Scene2 extends Phaser.Scene {
         this.playerHealth -= enemy.getStrength();
         this.player.setTint(0xff0000, 0xff0000, 0xff0000, 0xff0000);
 
-        console.log(enemy.getStrength());
-
         // time of immunity
         var tween = this.tweens.add({
           targets: this.player,
           completeDelay: 500,
           repeat: 0,
           onComplete: function(){
-            console.log("ow!");
             this.player.alpha = 1;
             this.player.clearTint();
           },
@@ -241,7 +238,6 @@ class Scene2 extends Phaser.Scene {
     // creates coordinates for the enemies so they will spawn just off screen
     var xRandom = this.createSpawnCoordinateX();
     var yRandom = this.createSpawnCoordinateY();
-    console.log("enemy spawned");
     var enemy = new Enemy(this, xRandom, yRandom);
   }
 
@@ -278,9 +274,7 @@ class Scene2 extends Phaser.Scene {
 
   hurtEnemy(theProjectile, theInjured){
     var damage = theProjectile.bulletStrength
-    console.log(damage);
     theInjured.setHealth(damage);
-    //console.log.(theInjured.enemyHealth);
     theProjectile.destroy();
   }
 
